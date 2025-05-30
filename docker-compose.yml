@@ -12,11 +12,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - db
-    ports:
-      - "8000:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=dbname
@@ -24,6 +24,17 @@ services:
       - DB_PASSWORD=password
     volumes:
       - .:/app
+    expose:
+      - "8000"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    depends_on:
+      - web
+    ports:
+      - "80:80"
 
 volumes:
   postgres_data:
